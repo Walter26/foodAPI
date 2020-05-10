@@ -1,24 +1,38 @@
-var createError = require("http-errors");
+//#region imports
 var express = require("express");
 var mongoose = require("mongoose");
+var bodyParser = require('body-parser')
+var morgan = require('morgan')
+//#endregion
+
+//#region routes import
+var UserRoute = require('./routes/UserRouter')
+//#endregion
 
 var app = express();
 
-// mongoose setup
+//#region middlewares
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
+
 mongoose.connect(process.env.MONGO_URI, {
     useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
 .then(() => {
-  console.log("success Connected to database");
+  console.log("Connected to DB");
 })
 .catch((err) => {
   debug(err);
   process.exit(1);
 });
+//#endregion
 
-
-// routes definitions
+//#region router defs
+app.use('/user', UserRoute)
+//#endregion
 
 module.exports = app;
