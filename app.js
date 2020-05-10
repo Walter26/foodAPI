@@ -20,7 +20,5 @@ mongoose.connect(process.env.MONGO_URI, {
 
 
 // routes definitions
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
 
 module.exports = app;
