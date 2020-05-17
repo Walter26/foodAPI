@@ -1,5 +1,13 @@
 const mongoose = require('mongoose'), Schema = mongoose.Schema
 
+var ListElementSchema = mongoose.Schema({
+    desc: {
+        type: String,
+        required: true
+    },
+    quantity: String
+}, {timestamps: false})
+
 var ListSchema = mongoose.Schema({
     autor : {
         type: String,
@@ -7,11 +15,7 @@ var ListSchema = mongoose.Schema({
     },
     name: String,
     desc: String,
-    elements: [{
-        type: Schema.Types.ObjectId,
-        ref: "ListElement",
-        required: true
-    }]
+    elements: [ListElementSchema]
 }, {timestamps: false})
 
 module.exports = mongoose.model("List", ListSchema)

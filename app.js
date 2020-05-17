@@ -13,10 +13,10 @@ var ListRoute = require('./routes/ListRouter')
 var app = express();
 
 //#region middlewares
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
+app.use(morgan('dev'))
 
 mongoose.connect(process.env.MONGO_URI, {
     useCreateIndex: true,

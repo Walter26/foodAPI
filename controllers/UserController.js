@@ -22,8 +22,8 @@ var login = (req, res, next) => {
             if (foundUser)
                 if (bcrypt.compareSync(req.query.password, foundUser.password))
                     return res.status(200).json(foundUser);
-                else return res.status(400).json({ status: "wrong password" });
-            else return res.status(400).json({ status: "not found" });
+                else return res.status(400).json({ status: "Wrong password" });
+            else return res.status(400).json({ status: "Not found" });
         })
         .catch((err) => {
             next(err);
@@ -52,7 +52,7 @@ var recoverPassword = (req, res, next) => {
             } else
                 return res
                     .status(400)
-                    .json({ status: "not found for password update" });
+                    .json({ status: "Not found for password update" });
         })
         .catch((err) => {
             next(err);
@@ -94,7 +94,7 @@ var UserController = {
                     throw new Error(`Usuario duplicado ${req.body.username}`);
                 else {
                     let newUser = new User({
-                        googleID: req.body.googleID || "",
+                        googleID: req.body.googleID,
                         username: req.body.username,
                         fullname: req.body.fullname,
                         password: bcrypt.hashSync(req.body.password, 10),
