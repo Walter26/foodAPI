@@ -2,6 +2,45 @@ var User = require("../models/UserModel");
 const bcrypt = require("bcrypt");
 const sgMail = require("@sendgrid/mail");
 
+var UserController = {
+    getRedirect: (req, res, next) => {
+        if (req.query.username && req.query.password)
+            login(req, res, next);
+        else if (req.query.email)
+            recoverPassword(req, res, next);
+        else
+            return res.status(400).json({status: "invalid method"})
+    },
+
+    register: (req, res, next) => {
+        User.findOne({
+            username: req.body.username,
+        })
+            .then((foundUser) => {
+                if (foundUser)
+                    throw new Error(`Usuario duplicado ${req.body.username}`);
+                else {
+                    let newUser = new User({
+                        googleID: req.body.googleID,
+                        username: req.body.username,
+                        fullname: req.body.fullname,
+                        password: bcrypt.hashSync(req.body.password, 10),
+                        email: req.body.email,
+                        photoUri: req.body.photoUri,
+                        lists: req.body.lists
+                    });
+                    return newUser.save();
+                }
+            })
+            .then((user) => {
+                return res.status(200).json(user);
+            })
+            .catch((err) => {
+                next(err);
+            });
+    },
+};
+
 var generateRandomPassword = () => {
     let alf = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let provisionalPass = "";
@@ -75,43 +114,6 @@ var sendEmail = (To, Subject, Html) => {
         .catch((error) => {
             console.log(error.response.body);
         });
-};
-
-var UserController = {
-    getRedirect: (req, res, next) => {
-        if (req.query.username && req.query.password)
-            login(req, res, next);
-        else if (req.query.email)
-            recoverPassword(req, res, next);
-    },
-
-    register: (req, res, next) => {
-        User.findOne({
-            username: req.body.username,
-        })
-            .then((foundUser) => {
-                if (foundUser)
-                    throw new Error(`Usuario duplicado ${req.body.username}`);
-                else {
-                    let newUser = new User({
-                        googleID: req.body.googleID,
-                        username: req.body.username,
-                        fullname: req.body.fullname,
-                        password: bcrypt.hashSync(req.body.password, 10),
-                        email: req.body.email,
-                        photoUri: req.body.photoUri || "",
-                        lists: req.body.lists || null,
-                    });
-                    return newUser.save();
-                }
-            })
-            .then((user) => {
-                return res.status(200).json(user);
-            })
-            .catch((err) => {
-                next(err);
-            });
-    },
 };
 
 module.exports = UserController;

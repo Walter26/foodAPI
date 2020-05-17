@@ -1,10 +1,24 @@
 const mongoose = require('mongoose'), Schema = mongoose.Schema
 
-var UserSchema = Schema({
-    googleID: {
+var ListElementSchema = mongoose.Schema({
+    desc: {
         type: String,
-        unique: true
+        required: true
     },
+    quantity: String
+}, {timestamps: false})
+
+var ListSchema = mongoose.Schema({
+    name: String,
+    desc: String,
+    listType: {
+        enum: ['Supermercado', 'Salud', 'Conveniencia', 'Entretenimiento', 'Electrónicos']
+    },
+    elements: [ListElementSchema]
+}, {timestamps: false})
+
+var UserSchema = Schema({
+    googleID: String,
     username: {
         type: String,
         required: true,
@@ -12,11 +26,12 @@ var UserSchema = Schema({
     },
     fullname: {
         type: String,
-        required: true,
+        required: [true, 'Empty string for fullname'],
     },
     password: {
         type: String,
-        required: true,
+        match: '(?=.*[A-Z])',
+        required: true
     },
     email: {
         type: String,
@@ -24,10 +39,7 @@ var UserSchema = Schema({
         unique: true
     },
     photoUri: String,
-    lists: [{
-        type: Schema.Types.ObjectId,
-        ref: "List"
-    }]
+    lists: [ListSchema]
 }, {timestamps: false})
 
 module.exports = mongoose.model("User", UserSchema)
