@@ -1,6 +1,10 @@
 const mongoose = require('mongoose'), Schema = mongoose.Schema
 
 var RecipeSchema = Schema({
+    autor : {
+        type: String,
+        required: true
+    },
     title: {
         type: String,
         required: true

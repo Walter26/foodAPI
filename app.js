@@ -7,6 +7,7 @@ var morgan = require('morgan')
 
 //#region routes import
 var UserRoute = require('./routes/UserRouter')
+var ListRoute = require('./routes/ListRouter')
 //#endregion
 
 var app = express();
@@ -33,6 +34,7 @@ mongoose.connect(process.env.MONGO_URI, {
 
 //#region router defs
 app.use('/user', UserRoute)
+app.use('/list', ListRoute)
 //#endregion
 
 module.exports = app;

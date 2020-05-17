@@ -1,6 +1,10 @@
 const mongoose = require('mongoose'), Schema = mongoose.Schema
 
 var ListSchema = mongoose.Schema({
+    autor : {
+        type: String,
+        required: true
+    },
     name: String,
     desc: String,
     elements: [{

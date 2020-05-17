@@ -13,9 +13,11 @@ var generateRandomPassword = () => {
 };
 
 var login = (req, res, next) => {
-    User.findOne({
-        username: req.query.username,
-    })
+    User.findOne(
+        {
+            username: req.query.username,
+        }
+    )
         .then((foundUser) => {
             if (foundUser)
                 if (bcrypt.compareSync(req.query.password, foundUser.password))
@@ -89,7 +91,7 @@ var UserController = {
         })
             .then((foundUser) => {
                 if (foundUser)
-                    throw new Error(`Usuario duplicado ${req.body.username}`); 
+                    throw new Error(`Usuario duplicado ${req.body.username}`);
                 else {
                     let newUser = new User({
                         googleID: req.body.googleID || "",
