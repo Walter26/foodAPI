@@ -11,9 +11,7 @@ var ListElementSchema = mongoose.Schema({
 var ListSchema = mongoose.Schema({
     name: String,
     desc: String,
-    listType: {
-        enum: ['Supermercado', 'Salud', 'Conveniencia', 'Entretenimiento', 'Electrónicos']
-    },
+    listType: String,
     elements: [ListElementSchema]
 }, {timestamps: false})
 
@@ -30,7 +28,6 @@ var UserSchema = Schema({
     },
     password: {
         type: String,
-        match: '(?=.*[A-Z])',
         required: true
     },
     email: {
