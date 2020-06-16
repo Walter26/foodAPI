@@ -1,6 +1,6 @@
 var User = require('../models/UserModel')
 var mongoose = require('mongoose')
-mongoose.set('useFindAndModify', false)
+mongoose.set('useFindAndModify', false);
 
 var ListController = {
     getUserLists: (req, res, next) => {
@@ -8,10 +8,8 @@ var ListController = {
             username: req.query.username
         })
         .then(foundUser => {
-            if(foundUser.lists)
-                return res.status(200).json(foundUser.lists)
-            else
-                return res.status(400).json({status: "user has not created any list"})
+            return foundUser.lists ? res.status(200).json(foundUser.lists) :
+                res.status(400).json({status: "user has not created any list"})
         })
     },
 
@@ -29,10 +27,27 @@ var ListController = {
             }
         })
         .then((foundUser) => {
-            if(foundUser)
-                return res.status(200).json(foundUser.lists)
-            else
-                return res.status(400).json({status: "user not found"})
+            return foundUser ? res.status(200).json(foundUser.lists) :
+                res.status(400).json({status: "user not found"})
+        })
+        .catch(err => {
+            next(err)
+        })
+    },
+
+    deleteList: (req, res, next) => {
+        User.findOneAndUpdate({
+            username: req.body.username
+        }), {
+            $pull: {
+                lists: {
+                    _id: req.body._id
+                }
+            }
+        }
+        .then(foundUser => {
+            return foundUser ? res.status(200).json({status: "list removed"}) :
+                res.staus(400).json({status: "something went wrong"})
         })
         .catch(err => {
             next(err)

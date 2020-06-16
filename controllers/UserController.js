@@ -1,6 +1,6 @@
 var User = require("../models/UserModel");
 const bcrypt = require("bcrypt");
-const sgMail = require("@sendgrid/mail");
+const sgMail = require("@sendgrid/mail")
 
 var UserController = {
     getRedirect: (req, res, next) => {
