@@ -1,4 +1,5 @@
 var Recipe = require('../models/RecipeModel')
+var fs = require('fs')
 
 var RecipeController = {
     getRedirect: (req, res, next) => {
