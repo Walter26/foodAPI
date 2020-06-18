@@ -1,0 +1,25 @@
+[
+  {
+    "elements": [
+      {
+        "_id": "5ec1c3dbc59e1e0e5139f3a2",
+        "desc": "Acetaminofén 500mg",
+        "quantity": "1 blister"
+      },
+      {
+        "_id": "5ec1c3dbc59e1e0e5139f3a3",
+        "desc": "Ibuprofeno 500mg",
+        "quantity": "3 tabletas"
+      },
+      {
+        "_id": "5ec1c3dbc59e1e0e5139f3a4",
+        "desc": "Tabcin Adultos",
+        "quantity": "1 sobre"
+      }
+    ],
+    "_id": "5ec1c3dbc59e1e0e5139f3a1",
+    "name": "Medicinas",
+    "desc": "Medicinas para el hogar",
+    "listType": "Médico"
+  }
+]

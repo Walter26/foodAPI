@@ -8,4 +8,7 @@ router.get('/', UserController.getRedirect)
 // POST methods
 router.post('/', UserController.register)
 
+// PUT methods
+router.put('/', UserController.updateUser)
+
 module.exports = router

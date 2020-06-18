@@ -8,4 +8,7 @@ router.get('/', ListController.getUserLists)
 // PUT methods
 router.put('/', ListController.createList)
 
+// DELETE methods
+router.delete('/', ListController.deleteList)
+
 module.exports = router

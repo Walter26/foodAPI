@@ -4,12 +4,12 @@ const sgMail = require("@sendgrid/mail")
 
 var UserController = {
     getRedirect: (req, res, next) => {
-        if (req.query.username && req.query.password)
+        if (req.body.username && req.body.password)
             login(req, res, next);
-        else if (req.query.email)
+        else if (req.body.email)
             recoverPassword(req, res, next);
         else
-            return res.status(400).json({status: "invalid method"})
+            return res.status(400).json({ status: "invalid method" })
     },
 
     register: (req, res, next) => {
@@ -39,6 +39,29 @@ var UserController = {
                 next(err);
             });
     },
+
+    updateUser: (req, res, next) => {
+        User.findOneAndUpdate(
+            { username: req.body.username },
+            {
+                googleID: req.body.googleID,
+                username: req.body.username,
+                fullname: req.body.fullname,
+                password: bcrypt.hashSync(req.body.password, 10),
+                email: req.body.email,
+                photoUri: req.body.photoUri,
+                lists: req.body.lists
+            },
+            { new: true }
+        )
+            .then(updatedUser => {
+                return updatedUser ? res.status(200).json({ status: "updated" }) :
+                    res.status(400).json({ status: "something went wrong" })
+            })
+            .catch(err => {
+                next(err)
+            })
+    }
 };
 
 var generateRandomPassword = () => {
@@ -54,12 +77,12 @@ var generateRandomPassword = () => {
 var login = (req, res, next) => {
     User.findOne(
         {
-            username: req.query.username,
+            username: req.body.username,
         }
     )
         .then((foundUser) => {
             if (foundUser)
-                if (bcrypt.compareSync(req.query.password, foundUser.password))
+                if (bcrypt.compareSync(req.body.password, foundUser.password))
                     return res.status(200).json(foundUser);
                 else return res.status(400).json({ status: "Wrong password" });
             else return res.status(400).json({ status: "Not found" });
@@ -72,13 +95,9 @@ var login = (req, res, next) => {
 var recoverPassword = (req, res, next) => {
     let newPass = generateRandomPassword()
     User.findOneAndUpdate(
-        {
-            email: req.query.email,
-        },
+        { email: req.body.email },
         { password: bcrypt.hashSync(newPass, 10) },
-        {
-            new: true,
-        }
+        { new: true }
     )
         .then((updatedUser) => {
             if (updatedUser) {

@@ -2,11 +2,11 @@ const mongoose = require('mongoose'), Schema = mongoose.Schema
 
 var StepSchema = mongoose.Schema({
     order: {
-        type: Int16Array,
+        type: Number,
         required: true
     },
     step: {
-        type: Text,
+        type: String,
         required: true
     }
 }, {timestamps: false})
@@ -38,6 +38,6 @@ var RecipeSchema = Schema({
     },
     videoURL: String,
     imageURL: String
-}, {timestamps: false});
+}, {timestamps: false})
 
 module.exports = mongoose.model("Recipe", RecipeSchema)
