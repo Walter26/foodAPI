@@ -2,7 +2,6 @@
 var express = require("express");
 var mongoose = require("mongoose");
 var bodyParser = require('body-parser')
-var morgan = require('morgan')
 //#endregion
 
 //#region routes import
@@ -17,7 +16,6 @@ var app = express();
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
-app.use(morgan('dev'))
 
 mongoose.connect(process.env.MONGO_URI, {
     useCreateIndex: true,
