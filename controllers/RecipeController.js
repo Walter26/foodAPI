@@ -55,18 +55,13 @@ var RecipeController = {
 var getAllUserRecipes = (req, res, next) => {
     Recipe.find({
         autor: req.body.username
-    }, (err, result) => {
-        if(err)
-            throw new Error();
-        else
-            return result.json()
     })
     .then(recipesArray => {
         fs.writeFile('temp/allUserRecipes.json', JSON.stringify(recipesArray, null, 2), (err) => {
             if(err) throw new Error();
         })
 
-        res.download('temp/allUserRecipes.json')
+        return res.status(200).download('temp/allUserRecipes.json')
     })
     .catch(err => {
         next(err)

@@ -11,7 +11,7 @@ var ListController = {
                 if(err) throw new Error();
             })
 
-            res.download('./temp/allUserLists.json')
+            res.download('temp/allUserLists.json')
         })
         .catch(err => {
             console.log(err)
