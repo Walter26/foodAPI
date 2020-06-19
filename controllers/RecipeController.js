@@ -66,7 +66,7 @@ var getAllUserRecipes = (req, res, next) => {
             if(err) throw new Error();
         })
 
-        res.download('./temp/allUserRecipes.json')
+        res.download('temp/allUserRecipes.json')
     })
     .catch(err => {
         next(err)
