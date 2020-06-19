@@ -1,5 +1,4 @@
 var Recipe = require('../models/RecipeModel')
-var fs = require('fs')
 
 var RecipeController = {
     getRedirect: (req, res, next) => {
@@ -57,11 +56,8 @@ var getAllUserRecipes = (req, res, next) => {
         autor: req.body.username
     })
     .then(recipesArray => {
-        fs.writeFile('temp/allUserRecipes.json', JSON.stringify(recipesArray, null, 2), (err) => {
-            if(err) throw new Error();
-        })
-
-        return res.status(200).download('temp/allUserRecipes.json')
+        return recipesArray ? res.status(200).json(recipesArray) :
+            res.status(400).json({status: "something went wrong"})
     })
     .catch(err => {
         next(err)
@@ -71,14 +67,8 @@ var getAllUserRecipes = (req, res, next) => {
 var getAllPublicRecipes = (req, res, next) => {
     Recipe.find({ privacy: false })
         .then(recipesArray => {
-            fs.writeFile('/app/temp/allRecipes.json', JSON.stringify(recipesArray, null, 2), 
-                (err) => {
-                    if(err) throw err;
-                }
-            )
-            .then(() => {
-                return res.download('/temp/allRecipes.json')
-            })
+            return recipesArray ? res.status(200).json(recipesArray) :
+            res.status(400).json({status: "something went wrong"})
         })
         .catch(err => {
             next(err)

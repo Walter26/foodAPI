@@ -7,11 +7,8 @@ var ListController = {
             username: req.body.username
         })
         .then(foundUser => {
-            fs.writeFile('temp/allUserLists.json', JSON.stringify(foundUser.lists, null, 2), (err) => {
-                if(err) throw new Error();
-            })
-
-            res.download('temp/allUserLists.json')
+            return foundUser.lists ? res.status(200).json(foundUser.lists) :
+                res.status(400).json({status: "something went wrong"})
         })
         .catch(err => {
             console.log(err)
