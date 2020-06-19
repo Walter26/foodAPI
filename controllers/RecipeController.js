@@ -71,7 +71,11 @@ var getAllUserRecipes = (req, res, next) => {
 var getAllPublicRecipes = (req, res, next) => {
     Recipe.find({ privacy: false })
         .then(recipesArray => {
-            fs.writeFile('temp/allRecipes.json', JSON.stringify(recipesArray, null, 2))
+            fs.writeFile('temp/allRecipes.json', JSON.stringify(recipesArray, null, 2), 
+                (err) => {
+                    if(err) throw err;
+                }
+            )
             .then(() => {
                 return res.download('./temp/allRecipes.json')
             })
