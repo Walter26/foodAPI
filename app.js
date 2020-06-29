@@ -32,7 +32,7 @@ mongoose.connect(process.env.MONGO_URI, {
 //#endregion
 
 //#region extras
-var UserController = require('./Controllers/UserController')
+var UserController = require('./controllers/UserController')
 ////#endregion
 
 //#region router defs
