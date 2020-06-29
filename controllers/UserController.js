@@ -61,6 +61,13 @@ var UserController = {
             .catch(err => {
                 next(err)
             })
+    },
+
+    getAllUsers: (req, res, next) => {
+        User.find({})
+        .then(everyUser => {
+            return res.status(200).json(everyUser)
+        })
     }
 };
 

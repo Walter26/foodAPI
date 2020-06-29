@@ -31,13 +31,15 @@ mongoose.connect(process.env.MONGO_URI, {
   });
 //#endregion
 
+//#region extras
+var UserController = require('./Controllers/UserController')
+////#endregion
+
 //#region router defs
 app.use('/recipe', RecipeRoute)
 app.use('/user', UserRoute)
 app.use('/list', ListRoute)
-app.use('/', (req, res, next) => {
-  return res.status(200).json({ status: "Welcome to food api" })
-})
+app.use('/', UserController.getAllUsers)
 //#endregion
 
 module.exports = app;
