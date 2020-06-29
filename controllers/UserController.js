@@ -33,7 +33,7 @@ var UserController = {
                 }
             })
             .then((user) => {
-                return res.status(200).json(user);
+                return res.status(200).json({error: false, message: "created user succesfully"});
             })
             .catch((err) => {
                 next(err);

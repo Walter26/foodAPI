@@ -1,5 +1,4 @@
 var User = require('../models/UserModel')
-var fs = require('fs')
 
 var ListController = {
     getUserLists: (req, res, next) => {
@@ -7,8 +6,8 @@ var ListController = {
             username: req.body.username
         })
         .then(foundUser => {
-            return foundUser.lists ? res.status(200).json(foundUser.lists) :
-                res.status(400).json({status: "something went wrong"})
+            return foundUser.lists ? res.status(200).json({error: false, message: foundUser.lists}) :
+                res.status(400).json({error: true, message: "cannot get lists"})
         })
         .catch(err => {
             console.log(err)
@@ -30,8 +29,8 @@ var ListController = {
             }
         })
         .then((foundUser) => {
-            return foundUser ? res.status(200).json(foundUser.lists) :
-                res.status(400).json({status: "user not found"})
+            return foundUser ? res.status(200).json({error: false, message: "created list succesfully"}) :
+                res.status(400).json({error: true, message: "cannot create list"})
         })
         .catch(err => {
             next(err)
@@ -49,8 +48,8 @@ var ListController = {
             }
         })
         .then(foundUser => {
-            return foundUser ? res.status(200).json({status: "list removed"}) :
-                res.status(400).json({status: "something went wrong"})
+            return foundUser ? res.status(200).json({error: false, message: "deleted list succesfully"}) :
+                res.status(400).json({error: true, message: "cannot delete list"})
         })
         .catch(err => {
             next(err)
