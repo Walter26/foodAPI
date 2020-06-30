@@ -3,6 +3,7 @@ var router = express.Router()
 var UserController = require('../controllers/UserController')
 
 // GET methods
+router.get('/username/password', UserController.login)
 router.get('/', UserController.getRedirect)
 
 // POST methods

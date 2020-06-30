@@ -3,10 +3,28 @@ const bcrypt = require("bcrypt");
 const sgMail = require("@sendgrid/mail")
 
 var UserController = {
+    login: (req, res, next) => {
+        User.findOne(
+            {
+                username: req.query.username,
+            }
+        )
+            .then((foundUser) => {
+                if (foundUser)
+                    if (bcrypt.compareSync(req.query.password, foundUser.password)){
+                        console.log(`Succes, ${{error: false, username: foundUser.username, fullname: foundUser.fullname}}`)
+                        return res.status(200).json({error: false, username: foundUser.username, fullname: foundUser.fullname})
+                    }
+                    else return res.status(400).json({ error: true, username: null, fullname: null });
+                else return res.status(500).json({ error: true, username: null, fullname: null });
+            })
+            .catch((err) => {
+                next(err);
+            });
+    },
+
     getRedirect: (req, res, next) => {
-        if (req.query.username && req.query.password)
-            login(req, res, next);
-        else if (req.query.email)
+        if (req.query.email)
             recoverPassword(req, res, next);
         else
             return res.status(400).json({ status: "invalid method" })
@@ -79,26 +97,6 @@ var generateRandomPassword = () => {
         provisionalPass += alf[Math.floor(Math.random() * 62)];
 
     return provisionalPass;
-};
-
-var login = (req, res, next) => {
-    User.findOne(
-        {
-            username: req.query.username,
-        }
-    )
-        .then((foundUser) => {
-            if (foundUser)
-                if (bcrypt.compareSync(req.query.password, foundUser.password)){
-                    return res.status(200).json({error: false, username: foundUser.username, fullname: foundUser.fullname});
-                    console.log(`Succes, ${{error: false, username: foundUser.username, fullname: foundUser.fullname}}`);
-                }
-                else return res.status(400).json({ error: true, username: null, fullname: null });
-            else return res.status(500).json({ error: true, username: null, fullname: null });
-        })
-        .catch((err) => {
-            next(err);
-        });
 };
 
 var recoverPassword = (req, res, next) => {
