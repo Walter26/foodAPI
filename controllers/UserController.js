@@ -4,9 +4,9 @@ const sgMail = require("@sendgrid/mail")
 
 var UserController = {
     getRedirect: (req, res, next) => {
-        if (req.body.username && req.body.password)
+        if (req.query.username && req.query.password)
             login(req, res, next);
-        else if (req.body.email)
+        else if (req.query.email)
             recoverPassword(req, res, next);
         else
             return res.status(400).json({ status: "invalid method" })
@@ -84,12 +84,12 @@ var generateRandomPassword = () => {
 var login = (req, res, next) => {
     User.findOne(
         {
-            username: req.body.username,
+            username: req.query.username,
         }
     )
         .then((foundUser) => {
             if (foundUser)
-                if (bcrypt.compareSync(req.body.password, foundUser.password))
+                if (bcrypt.compareSync(req.query.password, foundUser.password))
                     return res.status(200).json({error: false, username: foundUser.username, fullname: foundUser.fullname});
                 else return res.status(400).json({ error: true, username: null, fullname: null });
             else return res.status(500).json({ error: true, username: null, fullname: null });
