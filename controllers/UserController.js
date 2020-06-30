@@ -90,9 +90,9 @@ var login = (req, res, next) => {
         .then((foundUser) => {
             if (foundUser)
                 if (bcrypt.compareSync(req.body.password, foundUser.password))
-                    return res.status(200).json(foundUser);
-                else return res.status(400).json({ status: "Wrong password" });
-            else return res.status(400).json({ status: "Not found" });
+                    return res.status(200).json({error: false, username: foundUser.username, fullname: foundUser.fullname});
+                else return res.status(400).json({ error: true, username: null, fullname: null });
+            else return res.status(500).json({ error: true, username: null, fullname: null });
         })
         .catch((err) => {
             next(err);
