@@ -89,8 +89,10 @@ var login = (req, res, next) => {
     )
         .then((foundUser) => {
             if (foundUser)
-                if (bcrypt.compareSync(req.query.password, foundUser.password))
+                if (bcrypt.compareSync(req.query.password, foundUser.password)){
                     return res.status(200).json({error: false, username: foundUser.username, fullname: foundUser.fullname});
+                    console.log(`Succes, ${{error: false, username: foundUser.username, fullname: foundUser.fullname}}`);
+                }
                 else return res.status(400).json({ error: true, username: null, fullname: null });
             else return res.status(500).json({ error: true, username: null, fullname: null });
         })
