@@ -32,14 +32,15 @@ mongoose.connect(process.env.MONGO_URI, {
 //#endregion
 
 //#region extras
-var UserController = require('./controllers/UserController')
+var UserController = require('./controllers/UserController');
+const { hashSync } = require("bcrypt");
 ////#endregion
 
 //#region router defs
-app.use('/recipe', RecipeRoute)
 app.use('/user', UserRoute)
+app.use('/recipe', RecipeRoute)
 app.use('/list', ListRoute)
-app.use('/', UserController.getAllUsers)
+app.get('/', UserController.getAllUsers)
 //#endregion
 
 module.exports = app;

@@ -3,72 +3,55 @@ const bcrypt = require("bcrypt");
 const sgMail = require("@sendgrid/mail")
 
 var UserController = {
-    login: (req, res, next) => {
-        User.findOne(
-            {
-                username: req.query.username,
-            }
-        )
-            .then((foundUser) => {
-                if (foundUser)
-                    if (bcrypt.compareSync(req.query.password, foundUser.password)){
-                        console.log(`Succes, ${{error: false, username: foundUser.username, fullname: foundUser.fullname}}`)
-                        return res.status(200).json({error: false, username: foundUser.username, fullname: foundUser.fullname})
-                    }
-                    else return res.status(400).json({ error: true, username: null, fullname: null });
-                else return res.status(500).json({ error: true, username: null, fullname: null });
-            })
-            .catch((err) => {
-                next(err);
-            });
-    },
-
     getRedirect: (req, res, next) => {
-        if (req.query.email)
+        if (req.query.username && req.query.password)
+            login(req, res, next)
+        else if (req.query.email)
             recoverPassword(req, res, next);
         else
             return res.status(400).json({ status: "invalid method" })
     },
 
     register: (req, res, next) => {
-        User.findOne({
-            username: req.body.username,
-        })
-            .then((foundUser) => {
-                if (foundUser)
-                    throw new Error(`Usuario duplicado ${req.body.username}`);
-                else {
-                    let newUser = new User({
-                        googleID: req.body.googleID,
-                        username: req.body.username,
-                        fullname: req.body.fullname,
-                        password: bcrypt.hashSync(req.body.password, 10),
-                        email: req.body.email,
-                        photoUri: req.body.photoUri,
-                        lists: req.body.lists
+        let hashedPassword = bcrypt.hash(req.query.password, 10)
+            .then(err => {
+                if(err)
+                    return res.json({error: true})
+
+                User.findOne({
+                    username: req.query.username,
+                })
+                    .then((foundUser) => {
+                        if (foundUser)
+                            throw new Error(`Usuario duplicado ${req.query.username}`);
+                        else {
+                            let newUser = new User({
+                                googleID: req.query.googleID,
+                                username: req.query.username,
+                                fullname: req.query.fullname,
+                                password: hashedPassword,
+                                email: req.query.email,
+                                photoUri: req.query.photoUri,
+                                lists: req.query.lists
+                            });
+                            return newUser.save();
+                        }
+                    })
+                    .then(() => {
+                        return res.status(200).json({ error: false, message: "created user succesfully" });
+                    })
+                    .catch((err) => {
+                        next(err);
                     });
-                    return newUser.save();
-                }
             })
-            .then((user) => {
-                return res.status(200).json({error: false, message: "created user succesfully"});
-            })
-            .catch((err) => {
-                next(err);
-            });
     },
 
     updateUser: (req, res, next) => {
         User.findOneAndUpdate(
             { username: req.body.username },
             {
-                googleID: req.body.googleID,
                 username: req.body.username,
-                fullname: req.body.fullname,
-                password: bcrypt.hashSync(req.body.password, 10),
-                email: req.body.email,
-                photoUri: req.body.photoUri,
-                lists: req.body.lists
+                ...req.body
             },
             { new: true }
         )
@@ -83,10 +66,30 @@ var UserController = {
 
     getAllUsers: (req, res, next) => {
         User.find({})
-        .then(everyUser => {
-            return res.status(200).json(everyUser)
-        })
+            .then(everyUser => {
+                return res.status(200).json(everyUser)
+            })
     }
+};
+
+var login = (req, res, next) => {
+    console.log(req.query)
+    User.findOne(
+        {
+            username: req.query.username,
+        }
+    )
+        .then((foundUser) => {
+            if (foundUser)
+                if (bcrypt.compare(req.query.password, foundUser.password)) {
+                    return res.status(200).json({ error: false, username: foundUser.username, fullname: foundUser.fullname })
+                }
+                else return res.status(400).json({ error: true, username: null, fullname: null });
+            else return res.status(404).json({ error: true, username: null, fullname: null });
+        })
+        .catch((err) => {
+            next(err);
+        });
 };
 
 var generateRandomPassword = () => {
@@ -101,27 +104,31 @@ var generateRandomPassword = () => {
 
 var recoverPassword = (req, res, next) => {
     let newPass = generateRandomPassword()
-    User.findOneAndUpdate(
-        { email: req.body.email },
-        { password: bcrypt.hashSync(newPass, 10) },
-        { new: true }
-    )
-        .then((updatedUser) => {
-            if (updatedUser) {
-                sendEmail(
-                    updatedUser.email,
-                    "Recuperación de contraseña",
-                    "Utiliza esta contraseña para iniciar sesion temporalmente: <strong>" + newPass + "</strong> y cambia los ajustes en la App."
-                );
-                return res.status(200).json(updatedUser);
-            } else
-                return res
-                    .status(400)
-                    .json({ status: "Not found for password update" });
+    newPass = bcrypt.hash(newPass, 10)
+        .then(err => {
+
+            User.findOneAndUpdate(
+                { email: req.body.email },
+                { password: bcrypt.hashSync(newPass, 10) },
+                { new: true }
+            )
+                .then((updatedUser) => {
+                    if (updatedUser) {
+                        sendEmail(
+                            updatedUser.email,
+                            "Recuperación de contraseña",
+                            "Utiliza esta contraseña para iniciar sesion temporalmente: <strong>" + newPass + "</strong> y cambia los ajustes en la App."
+                        );
+                        return res.status(200).json(updatedUser);
+                    } else
+                        return res
+                            .status(400)
+                            .json({ status: "Not found for password update" });
+                })
+                .catch((err) => {
+                    next(err);
+                });
         })
-        .catch((err) => {
-            next(err);
-        });
 };
 
 var sendEmail = (To, Subject, Html) => {
