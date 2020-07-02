@@ -8,7 +8,7 @@ aws.config.update({
     region: 'us-east-1'
 })
 
-const s3 = new aws.s3()
+const s3 = new aws.S3()
 
 const imageTypes = ['image/jpg', 'image/png', 'image/jpeg', 'image/BMP']
 
