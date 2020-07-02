@@ -24,6 +24,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
         storage: multerS3({
             s3: s3,
+            acl: 'public-read',
             bucket: 'imagesapisv',
             key: function(req, file, cb) {
                 cb(null, 'uploads/' + new Date().toISOString() + file.originalname);
