@@ -36,8 +36,7 @@ var RecipeSchema = Schema({
         type: Boolean,
         required: true
     },
-    videoURL: String,
-    imageURL: String
+    imageLocation: String
 }, {timestamps: false})
 
 module.exports = mongoose.model("Recipe", RecipeSchema)

@@ -13,37 +13,33 @@ var UserController = {
     },
 
     register: (req, res, next) => {
-        let hashedPassword = bcrypt.hash(req.query.password, 10)
-            .then(err => {
-                if(err)
-                    return res.json({error: true})
-
-                User.findOne({
-                    username: req.query.username,
-                })
-                    .then((foundUser) => {
-                        if (foundUser)
-                            throw new Error(`Usuario duplicado ${req.query.username}`);
-                        else {
-                            let newUser = new User({
-                                googleID: req.query.googleID,
-                                username: req.query.username,
-                                fullname: req.query.fullname,
-                                password: hashedPassword,
-                                email: req.query.email,
-                                photoUri: req.query.photoUri,
-                                lists: req.query.lists
-                            });
-                            return newUser.save();
-                        }
-                    })
-                    .then(() => {
-                        return res.status(200).json({ error: false, message: "created user succesfully" });
-                    })
-                    .catch((err) => {
-                        next(err);
-                    });
+        bcrypt.hash(req.body.password, 10, function (err, hash) {
+            User.findOne({
+                username: req.body.username,
             })
+                .then((foundUser) => {
+                    if (foundUser)
+                        throw new Error('F');
+                    else {
+                        let newUser = new User({
+                            username: req.body.username,
+                            fullname: req.body.fullname,
+                            password: hash,
+                            email: req.body.email,
+                            userImage: req.file.path || "INF",
+                            lists: req.body.lists
+                        });
+                        return newUser.save();
+                    }
+                })
+                .then((newUser) => {
+                    // return res.status(200).json({ error: false, message: "created user succesfully" });
+                    return res.status(200).json(newUser);
+                })
+                .catch((err) => {
+                    next(err);
+                });
+        })
     },
 
     updateUser: (req, res, next) => {
@@ -82,7 +78,11 @@ var login = (req, res, next) => {
         .then((foundUser) => {
             if (foundUser)
                 if (bcrypt.compare(req.query.password, foundUser.password)) {
-                    return res.status(200).json({ error: false, username: foundUser.username, fullname: foundUser.fullname })
+                    return res.status(200).json(
+                        {
+                            error: false, username: foundUser.username, 
+                            fullname: foundUser.fullname, userImage: foundUser.userImage
+                        })
                 }
                 else return res.status(400).json({ error: true, username: null, fullname: null });
             else return res.status(404).json({ error: true, username: null, fullname: null });

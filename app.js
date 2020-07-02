@@ -13,6 +13,7 @@ var RecipeRoute = require('./routes/RecipeRouter')
 var app = express();
 
 //#region middlewares
+app.use('/uploads', express.static('uploads'))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 

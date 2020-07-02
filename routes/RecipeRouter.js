@@ -1,3 +1,5 @@
+const upload = require('../models/ImageParserModel')
+
 var express = require('express')
 var router = express.Router()
 var RecipeController = require('../controllers/RecipeController')
@@ -6,6 +8,6 @@ var RecipeController = require('../controllers/RecipeController')
 router.get('/', RecipeController.getRedirect)
 
 // POST methods
-router.post('/', RecipeController.createRecipe)
+router.post('/', upload.single('recipeImage'), RecipeController.createRecipe)
 
 module.exports = router

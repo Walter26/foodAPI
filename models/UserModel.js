@@ -16,7 +16,6 @@ var ListSchema = mongoose.Schema({
 }, {timestamps: false})
 
 var UserSchema = Schema({
-    googleID: String,
     username: {
         type: String,
         required: true,
@@ -24,7 +23,7 @@ var UserSchema = Schema({
     },
     fullname: {
         type: String,
-        required: [true, 'Empty string for fullname'],
+        required: true,
     },
     password: {
         type: String,
@@ -35,7 +34,7 @@ var UserSchema = Schema({
         required: true,
         unique: true
     },
-    photoUri: String,
+    userImage: String,
     lists: [ListSchema]
 }, {timestamps: false})
 

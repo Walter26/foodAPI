@@ -25,8 +25,7 @@ var RecipeController = {
                         steps: req.body.steps,
                         ingredients: req.body.ingredients,
                         privacy: req.body.privacy || false,
-                        videoURL: req.body.videoURL || "N/A",
-                        imageURL: req.body.imageURL || "N/A"
+                        imageURL: req.file.path || "N/A"
                     })
                     return newRecipe.save();
                 }
