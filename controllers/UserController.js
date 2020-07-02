@@ -27,7 +27,7 @@ var UserController = {
                             fullname: req.body.fullname,
                             password: hash,
                             email: req.body.email,
-                            userImage: `https://imagesapisv.s3.amazonaws.com/${req.file.path}` || "INF",
+                            userImage: req.file.location || "INF",
                             lists: req.body.lists
                         });
                         return newUser.save();
