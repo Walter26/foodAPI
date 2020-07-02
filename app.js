@@ -1,7 +1,9 @@
 //#region imports
 var express = require("express");
 var mongoose = require("mongoose");
-var bodyParser = require('body-parser')
+var aws = require('aws-sdk')
+
+const S3_BUCKET = process.env.S3_BUCKET
 //#endregion
 
 //#region routes import
@@ -34,7 +36,6 @@ mongoose.connect(process.env.MONGO_URI, {
 
 //#region extras
 var UserController = require('./controllers/UserController');
-const { hashSync } = require("bcrypt");
 ////#endregion
 
 //#region router defs

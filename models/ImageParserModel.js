@@ -1,15 +1,16 @@
 const multer = require('multer')
+const multerS3 = require('multer-s3')
+const aws = require('aws-sdk')
+
+aws.config.update({
+    secretAccessKey: process.env.KEY,
+    accessKeyId: process.env.KEY_ID,
+    region: 'us-east-1'
+})
+
+const s3 = new aws.s3()
 
 const imageTypes = ['image/jpg', 'image/png', 'image/jpeg', 'image/BMP']
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, './uploads/')
-    },
-    filename: (req, file, cb) => {
-        cb(null, new Date().toISOString() + file.originalname);
-    }
-})
 
 const fileFilter = (req, file, cb) => {
     if (imageTypes.includes(file.mimetype)) {
@@ -21,7 +22,13 @@ const fileFilter = (req, file, cb) => {
 }
 
 const upload = multer({
-        storage: storage,
+        storage: multerS3({
+            s3: s3,
+            bucket: 'imagesapisv',
+            key: function(req, file, cb) {
+                cb(null, 'uploads/' + new Date().toISOString() + file.originalname);
+            }
+        }),
         limits: {
             fileSize: 1024 * 1024 * 5
         },
