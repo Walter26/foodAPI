@@ -13,6 +13,7 @@ var UserController = {
     },
 
     register: (req, res, next) => {
+        console.log(req.file)
         bcrypt.hash(req.body.password, 10, function (err, hash) {
             User.findOne({
                 username: req.body.username,
