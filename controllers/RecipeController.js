@@ -73,7 +73,16 @@ var getAllPublicRecipes = (req, res, next) => {
     Recipe.find({ privacy: false })
         .then(recipesArray => {
             return recipesArray ? res.status(200).json(
-                {error: false, message: "success", recipes: recipesArray}
+                {error: false, message: "success", recipes: recipesArray.map(element => {
+                    delete element._id
+                    element.steps.forEach(sub => {
+                        delete sub._id
+                    })
+                    element.ingredients.forEach(sub => {
+                        delete sub._id
+                    })
+                    delete element.__v
+                })}
             ) :
             res.status(400).json(
                 {error: true, message: "failure", recipes: null}
