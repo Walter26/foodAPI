@@ -20,7 +20,7 @@ var IngredientSchema = mongoose.Schema({
 }, {timestamps: false})
 
 var RecipeSchema = Schema({
-    autor : {
+    author : {
         type: String,
         required: true
     },
