@@ -16,7 +16,7 @@ var IngredientSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    meassure: String
+    measure: String
 }, {timestamps: false})
 
 var RecipeSchema = Schema({
