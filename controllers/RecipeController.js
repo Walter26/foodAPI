@@ -12,7 +12,7 @@ var RecipeController = {
     // POST
     createRecipe: (req, res, next) => {
         Recipe.findOne({
-            autor: req.body.autor,
+            author: req.body.author,
             title: req.body.title
         })
             .then(foundList => {
@@ -20,7 +20,7 @@ var RecipeController = {
                     return res.status(400).json({ status: "recipe already exists" })
                 else {
                     let newRecipe = new Recipe({
-                        autor: req.body.autor,
+                        author: req.body.author,
                         title: req.body.title,
                         desc: req.body.desc || "no desc",
                         recipeType: req.body.recipeType || null,
@@ -54,7 +54,7 @@ var RecipeController = {
 
 var getAllUserRecipes = (req, res, next) => {
     Recipe.find({
-        autor: req.query.author
+        author: req.query.author
     })
     .then(recipesArray => {
         return recipesArray ? res.status(200).json(
