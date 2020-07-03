@@ -82,6 +82,8 @@ var getAllPublicRecipes = (req, res, next) => {
                         delete sub._id
                     })
                     delete element.__v
+
+                    return element
                 })}
             ) :
             res.status(400).json(
