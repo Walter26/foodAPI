@@ -1,13 +1,15 @@
 var Recipe = require('../models/RecipeModel')
 
 var RecipeController = {
+    // GET
     getRedirect: (req, res, next) => {
-        if(req.body.username)
+        if(req.query.username)
             getAllUserRecipes(req, res, next)
         else
             getAllPublicRecipes(req, res, next)
     },
 
+    // POST
     createRecipe: (req, res, next) => {
         Recipe.findOne({
             autor: req.body.autor,
@@ -25,7 +27,7 @@ var RecipeController = {
                         steps: req.body.steps,
                         ingredients: req.body.ingredients,
                         privacy: req.body.privacy || false,
-                        imageURL: req.file.path || "N/A"
+                        recipeImage: req.file.location || "INF"
                     })
                     return newRecipe.save();
                 }
@@ -52,11 +54,15 @@ var RecipeController = {
 
 var getAllUserRecipes = (req, res, next) => {
     Recipe.find({
-        autor: req.body.username
+        autor: req.query.author
     })
     .then(recipesArray => {
-        return recipesArray ? res.status(200).json(recipesArray) :
-            res.status(400).json({status: "something went wrong"})
+        return recipesArray ? res.status(200).json(
+            {error: false, message: "success", recipes: recipesArray}
+        ) :
+            res.status(400).json(
+                {error: true, message: "failure", recipes: null}
+            )
     })
     .catch(err => {
         next(err)
@@ -66,8 +72,12 @@ var getAllUserRecipes = (req, res, next) => {
 var getAllPublicRecipes = (req, res, next) => {
     Recipe.find({ privacy: false })
         .then(recipesArray => {
-            return recipesArray ? res.status(200).json(recipesArray) :
-            res.status(400).json({status: "something went wrong"})
+            return recipesArray ? res.status(200).json(
+                {error: false, message: "success", recipes: recipesArray}
+            ) :
+            res.status(400).json(
+                {error: true, message: "failure", recipes: null}
+            )
         })
         .catch(err => {
             next(err)

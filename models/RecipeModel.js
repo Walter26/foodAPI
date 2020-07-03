@@ -36,7 +36,7 @@ var RecipeSchema = Schema({
         type: Boolean,
         required: true
     },
-    imageLocation: String
+    recipeImage: String
 }, {timestamps: false})
 
 module.exports = mongoose.model("Recipe", RecipeSchema)
