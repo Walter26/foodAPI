@@ -3,8 +3,8 @@ var Recipe = require('../models/RecipeModel')
 var RecipeController = {
     // GET
     getRedirect: (req, res, next) => {
-        if(req.query.username){
-            console.log(`entering for ${req.query.username}`)
+        if(req.query.author){
+            console.log(`entering for ${req.query.author}`)
             getAllUserRecipes(req, res, next)
         }
         else{
