@@ -3,10 +3,14 @@ var Recipe = require('../models/RecipeModel')
 var RecipeController = {
     // GET
     getRedirect: (req, res, next) => {
-        if(req.query.username)
+        if(req.query.username){
+            console.log(`entering for ${req.query.username}`)
             getAllUserRecipes(req, res, next)
-        else
+        }
+        else{
+            console.log(`entering for every user`)
             getAllPublicRecipes(req, res, next)
+        }
     },
 
     // POST
