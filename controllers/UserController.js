@@ -42,6 +42,7 @@ var UserController = {
                 })
                 .catch((err) => {
                     console.log('found in catch')
+                    console.log(err)
                     return res.status(400).json(
                         {
                             error: true, username: "", 
