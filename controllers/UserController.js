@@ -21,7 +21,7 @@ var UserController = {
                     console.log("Loggin found user")
                     console.log(foundUser)
                     if (foundUser)
-                        throw new Error('F');
+                        return null
                     else {
                         var imageURL = ""
                         if(req.file == undefined)
@@ -43,20 +43,17 @@ var UserController = {
                     }
                 })
                 .then((newUser) => {
-                    return res.status(200).json({
+                    return newUser ? res.status(200).json({
                         error: false, username: newUser.username, 
                         fullname: newUser.fullname, userImage: newUser.userImage
-                    });
+                    }) : 
+                    res.status(400).json({
+                        error: true, username: null, 
+                        fullname: null, userImage: null
+                    })
                 })
                 .catch((err) => {
-                    console.log('found in catch')
-                    console.log(err)
-                    return res.status(400).json(
-                        {
-                            error: true, username: "", 
-                            fullname: "", userImage: ""
-                        }
-                    )
+                    next(err)
                 });
         })
     },
