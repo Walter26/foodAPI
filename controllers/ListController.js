@@ -6,8 +6,8 @@ var ListController = {
             username: req.body.username
         })
         .then(foundUser => {
-            return foundUser.lists ? res.status(200).json({error: false, message: foundUser.lists}) :
-                res.status(400).json({error: true, message: "cannot get lists"})
+            return foundUser.lists ? res.status(200).json({error: false, message: "success", lists: foundUser.lists}) :
+                res.status(400).json({error: true, message: "cannot get lists", lists: null})
         })
         .catch(err => {
             console.log(err)
