@@ -23,12 +23,20 @@ var UserController = {
                     if (foundUser)
                         throw new Error('F');
                     else {
+                        var imageURL = ""
+                        if(req.file == undefined)
+                            imageURL = req.body.userImage
+                        else if(!req.body.userImage)
+                            imageURL = "INF"
+                        else
+                            imageURL = req.file.location
+
                         let newUser = new User({
                             username: req.body.username,
                             fullname: req.body.fullname,
                             password: hash,
                             email: req.body.email,
-                            userImage: req.file.userImage || req.body.userImage || "INF",
+                            userImage: imageURL,
                             lists: req.body.lists
                         });
                         return newUser.save();
