@@ -18,6 +18,8 @@ var UserController = {
                 username: req.body.username,
             })
                 .then((foundUser) => {
+                    console.log("Loggin found user")
+                    console.log(foundUser)
                     if (foundUser)
                         throw new Error('F');
                     else {
@@ -39,6 +41,7 @@ var UserController = {
                     });
                 })
                 .catch((err) => {
+                    console.log('found in catch')
                     return res.status(400).json(
                         {
                             error: true, username: "", 
