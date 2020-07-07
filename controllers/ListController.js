@@ -2,8 +2,9 @@ var User = require('../models/UserModel')
 
 var ListController = {
     getUserLists: (req, res, next) => {
+        console.log(req.query)
         User.findOne({
-            username: req.body.username
+            username: req.query.username
         })
         .then(foundUser => {
             return foundUser.lists ? res.status(200).json({error: false, message: "success", lists: foundUser.lists}) :
