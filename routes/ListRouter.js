@@ -6,7 +6,7 @@ var ListController = require('../controllers/ListController')
 router.get('/', ListController.getUserLists)
 
 // PUT methods
-router.put('/', ListController.createList)
+router.post('/', ListController.createList)
 
 // DELETE methods
 router.delete('/', ListController.deleteList)
