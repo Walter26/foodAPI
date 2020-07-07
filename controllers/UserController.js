@@ -4,9 +4,9 @@ const sgMail = require("@sendgrid/mail")
 
 var UserController = {
     getRedirect: (req, res, next) => {
-        if (req.query.username && req.query.password)
+        if (req.query.username || req.query.email && req.query.password)
             login(req, res, next)
-        else if (req.query.email)
+        else if (req.query.email && !req.query.email)
             recoverPassword(req, res, next);
         else
             return res.status(400).json({ status: "invalid method" })
@@ -34,11 +34,18 @@ var UserController = {
                     }
                 })
                 .then((newUser) => {
-                    // return res.status(200).json({ error: false, message: "created user succesfully" });
-                    return res.status(200).json(newUser);
+                    return res.status(200).json({
+                        error: false, username: newUser.username, 
+                        fullname: newUser.fullname, userImage: newUser.userImage
+                    });
                 })
                 .catch((err) => {
-                    next(err);
+                    return res.status(400).json(
+                        {
+                            error: true, username: "", 
+                            fullname: "", userImage: ""
+                        }
+                    )
                 });
         })
     },
@@ -73,7 +80,10 @@ var login = (req, res, next) => {
     console.log(req.query)
     User.findOne(
         {
-            username: req.query.username,
+            $or: [
+                {username: req.query.username},
+                {email: req.query.email}
+            ]
         }
     )
         .then((foundUser) => {
@@ -149,5 +159,11 @@ var sendEmail = (To, Subject, Html) => {
             console.log(error.response.body);
         });
 };
+
+var checkExistingUser = (req, res, next) => {
+    User.findOne(
+        {username: req.query.username}
+    )
+}
 
 module.exports = UserController;
