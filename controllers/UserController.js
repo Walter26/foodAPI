@@ -47,7 +47,7 @@ var UserController = {
                         error: false, username: newUser.username, 
                         fullname: newUser.fullname, userImage: newUser.userImage
                     }) : 
-                    res.status(400).json({
+                    res.status(200).json({
                         error: true, username: null, 
                         fullname: null, userImage: null
                     })
