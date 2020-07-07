@@ -28,7 +28,7 @@ var UserController = {
                             fullname: req.body.fullname,
                             password: hash,
                             email: req.body.email,
-                            userImage: req.file.location || "INF",
+                            userImage: req.file.userImage || "INF",
                             lists: req.body.lists
                         });
                         return newUser.save();
