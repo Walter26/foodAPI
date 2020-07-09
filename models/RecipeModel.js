@@ -30,8 +30,8 @@ var RecipeSchema = Schema({
     },
     desc: String,
     recipeType: [String],
-    steps: [StepSchema],
-    ingredients: [IngredientSchema],
+    steps: Schema.Types.Mixed,
+    ingredients: Schema.Types.Mixed,
     privacy: {
         type: Boolean,
         required: true
