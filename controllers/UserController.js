@@ -19,17 +19,31 @@ var UserController = {
             })
                 .then((foundUser) => {
                     console.log("Loggin found user")
-                    console.log(foundUser)
                     if (foundUser)
                         return null
                     else {
                         var imageURL = ""
-                        if(req.file == undefined)
+                        if(req.file == undefined && req.body.userImage){
+                            console.log('---------------------------------------');
+                            console.log('req file is undefined and userImage not')
+                            console.log(req.body.userImage)
+                            console.log('---------------------------------------');
+
                             imageURL = req.body.userImage
-                        else if(!req.body.userImage)
+                        }
+                        else if(req.file == undefined && !req.body.userImage){
+                            console.log('---------------------------------------');
+                            console.log('both are undefined')
+                            console.log('---------------------------------------');
                             imageURL = "INF"
-                        else
+                        }
+                        else{
+                            console.log('---------------------------------------');
+                            console.log('req file is undefined and userImage not')
+                            console.log(req.body.userImage)
+                            console.log('---------------------------------------');
                             imageURL = req.file.location
+                        }
 
                         let newUser = new User({
                             username: req.body.username,
