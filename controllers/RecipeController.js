@@ -19,8 +19,8 @@ var RecipeController = {
             author: req.body.author,
             title: req.body.title
         })
-            .then(foundList => {
-                if (foundList)
+            .then(foundRecipe => {
+                if (foundRecipe)
                     return res.status(400).json({ status: "recipe already exists" })
                 else {
                     var recipeImage = !req.file ? "INF" : req.file.location
@@ -60,12 +60,20 @@ var RecipeController = {
 
     updateRecipe: (req, res, next) => {
         Recipe.findByIdAndUpdate(
-            {_id: req.body._id},
+            { _id: req.body._id },
             {
                 _id: req.body._id,
-                recipeImage: req.file.location || "INF"
+                recipeImage: req.file.location || "INF",
+                ...req.body
             }
         )
+            .then(updatedRecipe => {
+                return updatedRecipe ? res.status(200).json({ status: "updated" }) :
+                    res.status(400).json({ status: "something went wrong" })
+            })
+            .catch(err => {
+                next(err)
+            })
     }
 }
 
