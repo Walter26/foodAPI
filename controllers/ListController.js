@@ -53,7 +53,7 @@ var ListController = {
                 }
             },
             {
-                arrayFilters: ['i._id': req.body.listData._id]
+                arrayFilters: [{"i._id": req.body.listData._id}]
             }
         )
             .then((foundUser) => {
