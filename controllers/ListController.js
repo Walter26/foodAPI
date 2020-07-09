@@ -17,8 +17,8 @@ var ListController = {
     },
 
     createList: (req, res, next) => {
-        console.log('logging reques body')
-        console.log(req.body)
+        console.log('logging request body')
+        console.log(req)
         User.findOneAndUpdate({
             username: req.body.username
         },{
