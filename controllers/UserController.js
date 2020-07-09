@@ -88,8 +88,8 @@ var login = (req, res, next) => {
     User.findOne(
         {
             $or: [
-                {username: req.query.username},
-                {email: req.query.email}
+                {email: req.query.email},
+                {username: req.query.username}
             ]
         }
     )
