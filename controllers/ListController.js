@@ -6,14 +6,14 @@ var ListController = {
         User.findOne({
             username: req.query.username
         })
-        .then(foundUser => {
-            return foundUser.lists ? res.status(200).json({error: false, message: "success", lists: foundUser.lists}) :
-                res.status(400).json({error: true, message: "cannot get lists", lists: null})
-        })
-        .catch(err => {
-            console.log(err)
-            next(err)
-        })
+            .then(foundUser => {
+                return foundUser.lists ? res.status(200).json({ error: false, message: "success", lists: foundUser.lists }) :
+                    res.status(400).json({ error: true, message: "cannot get lists", lists: null })
+            })
+            .catch(err => {
+                console.log(err)
+                next(err)
+            })
     },
 
     createList: (req, res, next) => {
@@ -24,7 +24,7 @@ var ListController = {
 
         User.findOneAndUpdate({
             username: req.body.username
-        },{
+        }, {
             $push: {
                 lists: {
                     name: req.body.listData.name,
@@ -34,13 +34,35 @@ var ListController = {
                 }
             }
         })
-        .then((foundUser) => {
-            return foundUser ? res.status(200).json({error: false, message: "created list succesfully"}) :
-                res.status(400).json({error: true, message: "cannot create list"})
-        })
-        .catch(err => {
-            next(err)
-        })
+            .then((foundUser) => {
+                return foundUser ? res.status(200).json({ error: false, message: "created list succesfully" }) :
+                    res.status(400).json({ error: true, message: "cannot create list" })
+            })
+            .catch(err => {
+                next(err)
+            })
+    },
+
+    updateList: (req, res, next) => {
+        User.findOneAndUpdate({
+            username: req.body.username
+        },
+            {
+                $set: {
+                    'lists.$[i]': req.body.listData,
+                }
+            },
+            {
+                arrayFilters: ['i._id': req.body.listData._id]
+            }
+        )
+            .then((foundUser) => {
+                return foundUser ? res.status(200).json({ error: false, message: "created updated succesfully" }) :
+                    res.status(400).json({ error: true, message: "cannot create list" })
+            })
+            .catch(err => {
+                next(err)
+            })
     },
 
     deleteList: (req, res, next) => {
@@ -53,13 +75,13 @@ var ListController = {
                 }
             }
         })
-        .then(foundUser => {
-            return foundUser ? res.status(200).json({error: false, message: "deleted list succesfully"}) :
-                res.status(400).json({error: true, message: "cannot delete list"})
-        })
-        .catch(err => {
-            next(err)
-        })
+            .then(foundUser => {
+                return foundUser ? res.status(200).json({ error: false, message: "deleted list succesfully" }) :
+                    res.status(400).json({ error: true, message: "cannot delete list" })
+            })
+            .catch(err => {
+                next(err)
+            })
     }
 }
 
