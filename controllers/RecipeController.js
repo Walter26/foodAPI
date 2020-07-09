@@ -15,6 +15,13 @@ var RecipeController = {
 
     // POST
     createRecipe: (req, res, next) => {
+        console.log("*************************************************************************")
+        console.log(req.body)
+        console.log("*************************************************************************")
+        console.log(req.file)
+        console.log("*************************************************************************")
+
+
         Recipe.findOne({
             author: req.body.author,
             title: req.body.title
