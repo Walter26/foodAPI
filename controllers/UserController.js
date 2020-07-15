@@ -4,9 +4,9 @@ const sgMail = require("@sendgrid/mail")
 
 var UserController = {
     getRedirect: (req, res, next) => {
-        if (req.query.username || req.query.email && req.query.password)
+        if (req.query.username && req.query.password)
             login(req, res, next)
-        else if (req.query.email && !req.query.email)
+        else if (req.query.email)
             recoverPassword(req, res, next);
         else
             return res.status(400).json({ status: "invalid method" })
@@ -18,9 +18,11 @@ var UserController = {
                 username: req.body.username,
             })
                 .then((foundUser) => {
-                    console.log("Loggin found user")
                     if (foundUser)
-                        return null
+                        return res.status(200).json({
+                            error: true, username: null, 
+                            fullname: null, userImage: null
+                        })
                     else {
                         var imageURL = ""
                         if(req.file == undefined && req.body.userImage){
@@ -39,7 +41,7 @@ var UserController = {
                         }
                         else{
                             console.log('---------------------------------------');
-                            console.log('req file is undefined and userImage not')
+                            console.log('req file isnt undefined and userImage is')
                             console.log(req.body.userImage)
                             console.log('---------------------------------------');
                             imageURL = req.file.location

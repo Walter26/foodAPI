@@ -31,8 +31,7 @@ var UserSchema = Schema({
     },
     email: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     userImage: String,
     lists: [ListSchema]
