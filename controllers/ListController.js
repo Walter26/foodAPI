@@ -72,7 +72,7 @@ var ListController = {
         }, {
             $pull: {
                 lists: {
-                    _id: req.params._id
+                    _id: req.params.id
                 }
             }
         })

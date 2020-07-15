@@ -12,6 +12,6 @@ router.post('/', ListController.createList)
 router.put('/', ListController.updateList)
 
 // DELETE methods
-router.delete('/:username/:_id', ListController.deleteList)
+router.delete('/:username/:id', ListController.deleteList)
 
 module.exports = router

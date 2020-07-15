@@ -47,7 +47,7 @@ var RecipeController = {
     // DELETE
     deleteRecipe: (req, res, next) => {
         Recipe.deleteOne({
-            _id: req.params._id
+            _id: req.params.id
         })
             .then(deletedCount => {
                 return deletedCount > 0 ? res.status(200).json({ error: false, message: "deleted" }) :

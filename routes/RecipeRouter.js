@@ -11,6 +11,6 @@ router.get('/', RecipeController.getRedirect)
 router.post('/', upload.single('recipeImage'), RecipeController.createRecipe)
 
 // DELETE methods
-router.delete('/:_id', RecipeController.deleteRecipe)
+router.delete('/:id', RecipeController.deleteRecipe)
 
 module.exports = router
