@@ -6,7 +6,7 @@ var UserController = {
     getRedirect: (req, res, next) => {
         if (req.query.username && req.query.password)
             login(req, res, next)
-        else if (req.query.email)
+        else if (req.query.email && req.query.password == undefined)
             recoverPassword(req, res, next);
         else
             return res.status(400).json({ status: "invalid method" })
