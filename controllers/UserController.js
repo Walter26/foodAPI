@@ -143,7 +143,7 @@ var recoverPassword = (req, res, next) => {
 
             User.findOneAndUpdate(
                 { email: req.query.email },
-                { password: bcrypt.hashSync(newPass, 10) },
+                { password: newPass },
                 { new: true }
             )
                 .then((updatedUser) => {
