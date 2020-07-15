@@ -10,4 +10,7 @@ router.get('/', RecipeController.getRedirect)
 // POST methods
 router.post('/', upload.single('recipeImage'), RecipeController.createRecipe)
 
+// DELETE methods
+router.delete('/:_id', RecipeController.deleteRecipe)
+
 module.exports = router

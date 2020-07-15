@@ -50,7 +50,7 @@ var RecipeController = {
             _id: req.params._id
         })
             .then(deletedCount => {
-                return count > 0 ? res.status(200).json({ error: false, status: "deleted" }) :
+                return deletedCount > 0 ? res.status(200).json({ error: false, status: "deleted" }) :
                     res.status(400).json({ error: true, status: "something went wrong" })
             })
             .catch(err => {
