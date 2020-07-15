@@ -130,7 +130,7 @@ var generateRandomPassword = () => {
     let alf = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let provisionalPass = "";
 
-    for (let i = 0; i < 10; i++)
+    for (let i = 0; i < 5; i++)
         provisionalPass += alf[Math.floor(Math.random() * 62)];
 
     return provisionalPass;
@@ -151,7 +151,8 @@ var recoverPassword = (req, res, next) => {
                         sendEmail(
                             updatedUser.email,
                             "Recuperación de contraseña",
-                            "Utiliza esta contraseña para iniciar sesion temporalmente: <strong>" + newPass + "</strong> y cambia los ajustes en la App."
+                            "Tu nueva contraseña es <strong>" + newPass + "</strong>.\nRecuerda que si " +
+                            "inicias sesión desde Google, entonces tu usuario es igual a tu correo con el que accedes."
                         );
                         return res.status(200).json(updatedUser);
                     } else
