@@ -19,10 +19,7 @@ var UserController = {
             })
                 .then((foundUser) => {
                     if (foundUser)
-                        return res.status(200).json({
-                            error: true, username: null,
-                            fullname: null, userImage: null
-                        })
+                        return null
                     else {
                         var imageURL = ""
                         if (req.file == undefined && req.body.userImage) {
