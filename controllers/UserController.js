@@ -20,12 +20,12 @@ var UserController = {
                 .then((foundUser) => {
                     if (foundUser)
                         return res.status(200).json({
-                            error: true, username: null, 
+                            error: true, username: null,
                             fullname: null, userImage: null
                         })
                     else {
                         var imageURL = ""
-                        if(req.file == undefined && req.body.userImage){
+                        if (req.file == undefined && req.body.userImage) {
                             console.log('---------------------------------------');
                             console.log('req file is undefined and userImage not')
                             console.log(req.body.userImage)
@@ -33,13 +33,13 @@ var UserController = {
 
                             imageURL = req.body.userImage
                         }
-                        else if(req.file == undefined && !req.body.userImage){
+                        else if (req.file == undefined && !req.body.userImage) {
                             console.log('---------------------------------------');
                             console.log('both are undefined')
                             console.log('---------------------------------------');
                             imageURL = "INF"
                         }
-                        else{
+                        else {
                             console.log('---------------------------------------');
                             console.log('req file isnt undefined and userImage is')
                             console.log(req.body.userImage)
@@ -60,13 +60,13 @@ var UserController = {
                 })
                 .then((newUser) => {
                     return newUser ? res.status(200).json({
-                        error: false, username: newUser.username, 
+                        error: false, username: newUser.username,
                         fullname: newUser.fullname, userImage: newUser.userImage
-                    }) : 
-                    res.status(200).json({
-                        error: true, username: null, 
-                        fullname: null, userImage: null
-                    })
+                    }) :
+                        res.status(200).json({
+                            error: true, username: null,
+                            fullname: null, userImage: null
+                        })
                 })
                 .catch((err) => {
                     next(err)
@@ -104,8 +104,8 @@ var login = (req, res, next) => {
     User.findOne(
         {
             $or: [
-                {email: req.query.email},
-                {username: req.query.username}
+                { email: req.query.email },
+                { username: req.query.username }
             ]
         }
     )
@@ -114,7 +114,7 @@ var login = (req, res, next) => {
                 if (bcrypt.compare(req.query.password, foundUser.password)) {
                     return res.status(200).json(
                         {
-                            error: false, username: foundUser.username, 
+                            error: false, username: foundUser.username,
                             fullname: foundUser.fullname, userImage: foundUser.userImage
                         })
                 }
@@ -138,32 +138,30 @@ var generateRandomPassword = () => {
 
 var recoverPassword = (req, res, next) => {
     let newPass = generateRandomPassword()
-    newPass = bcrypt.hash(newPass, 10)
-        .then(err => {
-
-            User.findOneAndUpdate(
-                { email: req.query.email },
-                { password: newPass },
-                { new: true }
-            )
-                .then((updatedUser) => {
-                    if (updatedUser) {
-                        sendEmail(
-                            updatedUser.email,
-                            "Recuperación de contraseña",
-                            "Tu nueva contraseña es <strong>" + newPass + "</strong>.\nRecuerda que si " +
-                            "inicias sesión desde Google, entonces tu usuario es igual a tu correo con el que accedes."
-                        );
-                        return res.status(200).json(updatedUser);
-                    } else
-                        return res
-                            .status(400)
-                            .json({ status: "Not found for password update" });
-                })
-                .catch((err) => {
-                    next(err);
-                });
-        })
+    bcrypt.hash(newPass, 10, function (error, hash) {
+        User.findOneAndUpdate(
+            { email: req.query.email },
+            { password: hash },
+            { new: true }
+        )
+            .then((updatedUser) => {
+                if (updatedUser) {
+                    sendEmail(
+                        updatedUser.email,
+                        "Recuperación de contraseña",
+                        "Tu nueva contraseña es <strong>" + newPass + "</strong>.\nRecuerda que si " +
+                        "inicias sesión desde Google, entonces tu usuario es igual a tu correo con el que accedes."
+                    );
+                    return res.status(200).json(updatedUser);
+                } else
+                    return res
+                        .status(400)
+                        .json({ status: "Not found for password update" });
+            })
+            .catch((err) => {
+                next(err);
+            });
+    })
 };
 
 var sendEmail = (To, Subject, Html) => {
@@ -186,7 +184,7 @@ var sendEmail = (To, Subject, Html) => {
 
 var checkExistingUser = (req, res, next) => {
     User.findOne(
-        {username: req.query.username}
+        { username: req.query.username }
     )
 }
 
