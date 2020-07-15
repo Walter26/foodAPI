@@ -66,6 +66,7 @@ var ListController = {
     },
 
     deleteList: (req, res, next) => {
+        console.log(req.params)
         User.findOneAndUpdate({
             username: req.params.username
         }, {
