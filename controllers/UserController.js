@@ -149,11 +149,11 @@ var recoverPassword = (req, res, next) => {
                         "Tu nueva contraseña es <strong>" + newPass + "</strong>.\nRecuerda que si " +
                         "inicias sesión desde Google, entonces tu usuario es igual a tu correo con el que accedes."
                     );
-                    return res.status(200).json(updatedUser);
+                    return res.status(200).json({error: false, message: "success"});
                 } else
                     return res
                         .status(400)
-                        .json({ status: "Not found for password update" });
+                        .json({error: true, message: "success"});
             })
             .catch((err) => {
                 next(err);

@@ -2,6 +2,9 @@ var express = require('express')
 var router = express.Router()
 var ListController = require('../controllers/ListController')
 
+// DELETE methods
+router.delete('/:username/:id', ListController.deleteList)
+
 // GET methods
 router.get('/', ListController.getUserLists)
 
@@ -10,8 +13,5 @@ router.post('/', ListController.createList)
 
 // POST methods
 router.put('/', ListController.updateList)
-
-// DELETE methods
-router.delete('/:username/:id', ListController.deleteList)
 
 module.exports = router
