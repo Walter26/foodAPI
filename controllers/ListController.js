@@ -67,11 +67,11 @@ var ListController = {
 
     deleteList: (req, res, next) => {
         User.findOneAndUpdate({
-            username: req.body.username
+            username: req.params.username
         }, {
             $pull: {
                 lists: {
-                    _id: req.body._id
+                    _id: req.params._id
                 }
             }
         })
